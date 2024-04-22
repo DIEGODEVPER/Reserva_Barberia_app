@@ -1,0 +1,5 @@
+google_api_python_client
+numpy
+protobuf
+streamlit
+streamlit_option_menu
