@@ -108,7 +108,7 @@ if selected == "Servicios":
         elif empleado == 'Juan':
             calendarid =  'none' #calendarid2
         calendar = GoogleCalendar(credentials, calendarid) #Se crea el objetio de la clase GoogleCalendar
-        hours_blocked = calendar.get_start_times(str(fecha))
+        hours_blocked = [] #calendar.get_start_times(str(fecha))
         result_hours = np.setdiff1d(horas_disponibles,hours_blocked)
     
 
