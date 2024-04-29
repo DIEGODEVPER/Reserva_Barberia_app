@@ -32,18 +32,15 @@ class GoogleCalendar:
         return event["items"][0]["id"]
     
 
-    #def get_start_times(self, date):
-        #events = self.get_events(date)
-        #start_times = []  #Declaracion de la lista #para mi Yo del futuro, esta parte queda por pasar el contenido del diccionario a la lista creada
-        #for event in events:
-        #for x in events:
-            #start_time = event['start']  #['dateTime']
-            # parsed_start_time = datetime.fromisoformat(start_time[:-6])
-           #hours_minutes = parsed_start_time.strftime("%H:%M")
-           #start_times.append(hours_minutes)
-           #start_time.append()
-           #start_times.append(x[0]["start"]["dateTime"])
-        #return start_time
+    def get_start_times(self, date):
+        events = self.get_events(date)
+        start_times = []  #Declaracion de la lista #para mi Yo del futuro, esta parte queda por pasar el contenido del diccionario a la lista creada
+        for event in events:
+            start_time = event['start']['dateTime']
+            parsed_start_time = datetime.fromisoformat(start_time[:-6])
+            hours_minutes = parsed_start_time.strftime("%H:%M")
+            start_times.append(hours_minutes)
+        return start_times
 
     
     def create_event(self, name_event, start_time, end_time, timezone, attendees=None):
@@ -77,10 +74,10 @@ class GoogleCalendar:
             event['summary'] = summary
 
         if start_time:
-            event['start']['dateTime'] = start_time.strftime('%Y-%m-%dT%H:%M:%S')
+            event[0]['start']['dateTime'] = start_time.strftime('%Y-%m-%dT%H:%M:%S')
 
         if end_time:
-            event['end']['dateTime'] = end_time.strftime('%Y-%m-%dT%H:%M:%S')
+            event[0]['end']['dateTime'] = end_time.strftime('%Y-%m-%dT%H:%M:%S')
 
         updated_event = self.service.events().update(calendarId=self.calendarid, eventId=event_id, body=event).execute()
         return updated_event
@@ -97,11 +94,36 @@ class GoogleCalendar:
 #calendar = GoogleCalendar(credentials, calendarid)
 
 #Crea Evento
-#name_evento = 'Evento de prueba'
-#start_date = '2024-04-13T11:30:00-05:00'
-#end_date = '2024-04-13T12:00:00-05:00'
+#name_evento = 'Hacer el desayuno'
+#start_date = '2024-04-27T13:00:00-05:00'
+#end_date = '2024-04-27T14:30:00-05:00'
 #timezone = 'America/Lima'
-#event = calendar.get_start_times('2024-04-12')
+#event = calendar.get_events('2024-04-27')
+
+#ouput = []
+#parsed_start_times = [] 
+#hours_minute = []
+#for events in event:
+    #start_time = events['start']['dateTime']
+    #parsed_start_time = datetime.fromisoformat(start_time[:-6])
+    #hours_minutes = parsed_start_time.strftime("%H:%M")
+    #output.append
+    #start_times.append(start_time)
+    #parsed_start_times.append(parsed_start_time)
+    #hours_minute.append(hours_minutes)
+
+#return start_times
+#events = calendar.get_start_times('2024-04-26')
+
+#salida = calendar.get_start_times('2024-04-27')
+
+#print(event[0]['summary'],event[0]['start']['dateTime'])
+#print(event[1]['summary'],event[0]['start']['dateTime'])
+#print(event[2]['summary'],event[0]['start']['dateTime'])
+#print(salida)
+#print(start_times)
+#print(parsed_start_times)
+#print(hours_minute)
 #print(event)
 #creamos el evento
 #event = calendar.create_event(name_evento, start_date,end_date, timezone)

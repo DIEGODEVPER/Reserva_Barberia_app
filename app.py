@@ -3,7 +3,7 @@ from  streamlit_option_menu import option_menu
 from google_calendar_class import GoogleCalendar
 import numpy as np
 import datetime as dt
-import json as json
+#import json as json
 #import '..streamlit/secrets.toml' 
 #from send_email import send
 #from google_sheets import GoogleSheet
@@ -22,13 +22,13 @@ def add_30_minutes(time_str):
 
 #Variables
 servicios = ["Corte degradado - 20 $","Corte y Barba - 25 $","Barba - 10 $", "Tinte - 25 $"]
-empleados = ["Julian","Juan"]
+empleados = ["Diego","Gabriel"]
 horas_disponibles = ['10:00', '10:30', '11:00', '11:30', '12:00', '12:30', '13:00', '13:30', '15:00', '15:30', '16:00', '16:30', '17:00', '17:30', '18:00', '18:30', '19:00']
 credentials =  'test-calendar-420116-6df0ced01187.json' #st.secrets["db_credencial"]['credencial_calentar_json']  #'test-calendar-420116-6df0ced01187.json'
-calendarid1 = 'diegofiis10@gmail.com'
+calendarid1 = st.secrets["db_credencial"]["smpt_username"] #correo del calendario en ID
 calendarid2 = '3c286a0e2918ef7053872ef71e0b2892e3c64eaed80255963793e349957f304e@group.calendar.google.com'
 timezone = 'America/Lima'
-empleado = 'Julian'
+empleado = 'Diego'
 document = 'app-citas'
 sheet = 'citas'
 #html_calendar = """<iframe src="https://calendar.google.com/calendar/embed?src=classtonidev%40gmail.com&ctz=Europe%2FMadrid" style="border: 0" width="800" height="600" frameborder="0" scrolling="no"></iframe>"""
@@ -103,15 +103,15 @@ if selected == "Servicios":
     email = a2.text_input("Tu email*")
     fecha = a1.date_input("Fecha")
     if fecha:
-        if empleado == 'Julian':
+        if empleado == 'Diego':
             calendarid = calendarid1
-        elif empleado == 'Juan':
+        elif empleado == 'Gabriel':
             calendarid =  'none' #calendarid2
         calendar = GoogleCalendar(credentials, calendarid) #Se crea el objetio de la clase GoogleCalendar
-        hours_blocked = [] #calendar.get_start_times(str(fecha))
+        hours_blocked = calendar.get_start_times(str(fecha)) #[]
         result_hours = np.setdiff1d(horas_disponibles,hours_blocked)
     
-
+    st.text(hours_blocked)
     hora = a2.selectbox("Horas disponibles", result_hours)
     servicio = a1.selectbox("Servicio*", servicios)
     empleado = a2.selectbox("Empleado",empleados)
@@ -133,9 +133,9 @@ if selected == "Servicios":
                 start_time = dt.datetime(fecha.year, fecha.month, fecha.day, hours1+1, minutes1).astimezone(dt.timezone.utc).strftime('%Y-%m-%dT%H:%M:%S')
                 end_time = dt.datetime(fecha.year, fecha.month, fecha.day, end_hours.hour+1, end_hours.minute).astimezone(dt.timezone.utc).strftime('%Y-%m-%dT%H:%M:%S')
                 summary = servicio+". "+ nombre
-                if empleado == "Julian":
+                if empleado == "Diego":
                     calendarid = calendarid1
-                elif empleado == "Juan":
+                elif empleado == "Gabriel":
                     calendarid = calendarid2
 
                 #crear evento en google calendar
