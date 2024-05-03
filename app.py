@@ -3,9 +3,10 @@ from  streamlit_option_menu import option_menu
 from google_calendar_class import GoogleCalendar
 import numpy as np
 import datetime as dt
+import pytz as pytz
 #import json as json
 #import '..streamlit/secrets.toml' 
-#from send_email import send
+from send_email import send
 #from google_sheets import GoogleSheet
 
 #Funciones
@@ -110,9 +111,11 @@ if selected == "Servicios":
         calendar = GoogleCalendar(credentials, calendarid) #Se crea el objetio de la clase GoogleCalendar
         hours_blocked = calendar.get_start_times(str(fecha)) #[]
         result_hours = np.setdiff1d(horas_disponibles,hours_blocked)
-    
+        #st.text(result_hours)
+
     st.text(hours_blocked)
     hora = a2.selectbox("Horas disponibles", result_hours)
+    #st.text(hora)
     servicio = a1.selectbox("Servicio*", servicios)
     empleado = a2.selectbox("Empleado",empleados)
     nota = a1.text_area("💬 Nota (opcional)")
@@ -127,11 +130,14 @@ if selected == "Servicios":
                 #create event in google calendar
                 precio = servicio.split("-")[1]      
                 parsed_time = dt.datetime.strptime(hora, "%H:%M").time()
+                #st.text(parsed_time)
                 hours1 = parsed_time.hour
+                st.text(hours1+1)
                 minutes1 = parsed_time.minute
                 end_hours = add_30_minutes(hora)
-                start_time = dt.datetime(fecha.year, fecha.month, fecha.day, hours1+1, minutes1).astimezone(dt.timezone.utc).strftime('%Y-%m-%dT%H:%M:%S')
-                end_time = dt.datetime(fecha.year, fecha.month, fecha.day, end_hours.hour+1, end_hours.minute).astimezone(dt.timezone.utc).strftime('%Y-%m-%dT%H:%M:%S')
+                start_time = dt.datetime(fecha.year, fecha.month, fecha.day, hours1-5, minutes1).astimezone(dt.timezone.utc).strftime('%Y-%m-%dT%H:%M:%S')
+                #st.text(start_time)
+                end_time = dt.datetime(fecha.year, fecha.month, fecha.day, end_hours.hour-5, end_hours.minute).astimezone(dt.timezone.utc).strftime('%Y-%m-%dT%H:%M:%S')
                 summary = servicio+". "+ nombre
                 if empleado == "Diego":
                     calendarid = calendarid1
@@ -145,5 +151,19 @@ if selected == "Servicios":
                 except Exception as e:
                     st.warning("Ha habido un error al crear su cita, por favor intentelo más tarde.")
 
-               
+                #envio de correo
+                send(email,nombre,fecha,hora,servicio,empleado)
+
+                #guardar información en google sheet
+                #try:
+                    #data = [[nombre,email,str(fecha),str(hora),servicio,empleado,nota,precio]]
+                    #google = GoogleSheet(credentials,document,sheet)
+                    #range = google.get_last_row_range()
+                    #google.write_data(range, data)
+                #except Exception as e:
+                    #print(e)
+
+                #mensaje de exito
+                st.success("Su cita ha sido creada correctamente")
+
     
