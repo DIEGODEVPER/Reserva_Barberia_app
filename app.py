@@ -135,9 +135,9 @@ if selected == "Servicios":
                 st.text(hours1+1)
                 minutes1 = parsed_time.minute
                 end_hours = add_30_minutes(hora)
-                start_time = dt.datetime(fecha.year, fecha.month, fecha.day, hours1-5, minutes1).astimezone(dt.timezone.utc).strftime('%Y-%m-%dT%H:%M:%S')
+                start_time = dt.datetime(fecha.year, fecha.month, fecha.day, hours1, minutes1).astimezone(dt.timezone.utc).strftime('%Y-%m-%dT%H:%M:%S')
                 #st.text(start_time)
-                end_time = dt.datetime(fecha.year, fecha.month, fecha.day, end_hours.hour-5, end_hours.minute).astimezone(dt.timezone.utc).strftime('%Y-%m-%dT%H:%M:%S')
+                end_time = dt.datetime(fecha.year, fecha.month, fecha.day, end_hours.hour, end_hours.minute).astimezone(dt.timezone.utc).strftime('%Y-%m-%dT%H:%M:%S')
                 summary = servicio+". "+ nombre
                 if empleado == "Diego":
                     calendarid = calendarid1
